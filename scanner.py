@@ -37,13 +37,13 @@ class portScanner():
             except OSError:
                 service = "////"
             
-            print(f"\r{str(port)}\t\t\t\t{GREEN}Open\t\t\t\t{RESET}{service}\n")
+            return (f"\r{str(port)}\t\t\t\t{GREEN}Open\t\t\t\t{RESET}{service}\n")
 
         elif status == "Filtered":
-            print(f"\r{str(port)}\t\t\t\t{YELLOW}Filtered\t\t\t\t{RESET} \n")
+            return (f"\r{str(port)}\t\t\t\t{YELLOW}Filtered\t\t\t\t{RESET} \n")
 
         elif status == "Close":
-            print(f"\r{str(port)}\t\t\t\t{RED}Close\t\t\t\t{RESET} \n")
+            return (f"\r{str(port)}\t\t\t\t{RED}Close\t\t\t\t{RESET} \n")
         
         elif status == "Open/Filtered":
             try:
@@ -51,11 +51,12 @@ class portScanner():
             except OSError:
                 service = "////"
             
-            print(f"\r{str(port)}\t\t\t\t{YELLOW}Open/Filtered\t\t\t\t{RESET}{service}\n")
+            return (f"\r{str(port)}\t\t\t\t{YELLOW}Open/Filtered\t\t\t\t{RESET}{service}\n")
     
     
     # Scan that sends a TCP packet to the target with a SYN flag to determine open ports   
     def defaultScan(self):
+        result = ""
         for port in self.ports:
             # Use a random port as the source port
             sourcePort = random.randint(1, 10000)
@@ -64,7 +65,7 @@ class portScanner():
             scanstealthResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= sourcePort, dport=port, flags="S"), timeout=1, verbose=False)
 
             if not scanstealthResponse:
-                self.printResult(port, "Open/Filtered")
+                result = result + self.printResult(port, "Open/Filtered") + "\n"
                 continue
             
             if scanstealthResponse and scanstealthResponse.haslayer(sc.TCP):
@@ -73,10 +74,10 @@ class portScanner():
                 # If the flag is SA (SYN-ACK) that means the port is open
                 if flag == "SA":
                     sendReset = sc.sr(sc.IP(dst=self.target) / sc.TCP(sport=80, dport=port, flags="AR"), timeout=1, verbose=False)
-                    self.printResult(port, "Open")
+                    result = result + self.printResult(port, "Open") + "\n"
 
                 elif flag == 0x14:
-                    self.printResult(port, "Close")
+                    result = result + self.printResult(port, "Close") + "\n"
 
                 elif flag == "RA":
                     continue
@@ -88,11 +89,14 @@ class portScanner():
                 filterCodes = [1, 2, 3, 9, 10, 13]
 
                 if scanstealthResponse[scli.ICMP].type == 3 and scanstealthResponse[scli.ICMP].code in filterCodes:
-                    self.printResult(port, "Filtered")
+                    result = result + self.printResult(port, "Filtered") + "\n"
                     continue
+        
+        return result
     
 
     def xmasScan(self):
+        result = ""
         for port in self.ports:
             # Use a random port as the source port
             sourcePort = random.randint(1, 10000)
@@ -102,22 +106,25 @@ class portScanner():
 
             # Now, if there's no reponse, so the port is open or filtered
             if not xmasResponse:
-                self.printResult(port, "Open/Filtered")
+                result = result + self.printResult(port, "Open/Filtered") + "\n"
 
             elif xmasResponse.haslayer(sc.TCP):
 
                 if xmasResponse[sc.TCP].flags == 0x14:
-                    self.printResult(port, "Close")
+                    result = result + self.printResult(port, "Close") + "\n"
 
             elif xmasResponse.haslayer(scli.ICMP):
                 filterCodes = [1, 2, 3, 9, 10, 13]
 
                 if xmasResponse[scli.ICMP].type == 3 and xmasResponse[scli.ICMP].code in filterCodes:
-                    self.printResult(port, "Filtered")
+                    result = result + self.printResult(port, "Filtered") + "\n"
                     continue
+        
+        return result
 
 
     def nullScan(self):
+        result = ""
         for port in self.ports:
             # Use a random port as the source port
             sourcePort = random.randint(1, 10000)
@@ -127,21 +134,24 @@ class portScanner():
 
             # Now, if there's no reponse, so the port is open or filtered
             if not nullResponse:
-                self.printResult(port, "Open/Filtered")
+                result = result + self.printResult(port, "Open/Filtered") + "\n"
 
             elif nullResponse.haslayer(sc.TCP):
                 if nullResponse[sc.TCP].flags == 0x14:
-                    self.printResult(port, "Close")
+                    result = result + self.printResult(port, "Close") + "\n"
 
             elif nullResponse.haslayer(scli.ICMP):
                 filterCodes = [1, 2, 3, 9, 10, 13]
 
                 if nullResponse[scli.ICMP].type == 3 and nullResponse[scli.ICMP].code in filterCodes:
-                    self.printResult(port, "Filtered")
+                    result = result + self.printResult(port, "Filtered") + "\n"
                     continue
+
+        return result
 
     # Send tcp packets with ACK flag to detect filtered ports
     def ackScan(self):
+        result = ""
         for port in self.ports:
             # Use a random port as the source port
             sourcePort = random.randint(1, 10000)
@@ -149,7 +159,7 @@ class portScanner():
             ackResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= sourcePort, dport=port, flags="A"), timeout=1, verbose=False)
 
             if not ackResponse:
-                self.printResult(port, "Filtered")
+                result = result + self.printResult(port, "Filtered") + "\n"
             
             elif ackResponse.haslayer(sc.TCP):
                 if ackResponse[sc.TCP].flags == 0x4:
@@ -159,12 +169,14 @@ class portScanner():
                 filterCodes = [1, 2, 3, 9, 10, 13]
 
                 if ackResponse[scli.ICMP].type == 3 and ackResponse[scli.ICMP].code in filterCodes:
-                    self.printResult(port, "Filtered")
+                    result = result + self.printResult(port, "Filtered") + "\n"
                     continue
 
+        return result
+
     def resultTable(self):
-        print("\n\nPORT\t\t\t\tSTATUS\t\t\t\tSERVICE")
-        print("-" * 80)
+        return ("\n\nPORT\t\t\t\tSTATUS\t\t\t\tSERVICE\n-----------------------------------------------------------------------------------------")
+    
 
 def main():
     # Checking the input arguments
@@ -178,31 +190,32 @@ def main():
 
     # The tool title
     title = pyfiglet.figlet_format("PORT SCANNER")
-    print(f"{CYAN}{title} {RESET}")
+    with open("result.txt", "w") as f:
+        f.write(f"{CYAN}{title} {RESET}\n")
+        f.write("-" * 50 + "\n")
+        f.write(f"Scanning target : {GREEN}{target}{RESET}\n")
+        f.write(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}\n")
+        f.write("-" * 50)
 
-    # Banner
-    print("-" * 50)
-    print(f"Scanning target : {GREEN}{target}{RESET}")
-    print(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}")
-    print("-" * 50)
     scanner = portScanner(target)
-    
     # Check the options of scanning
-    if sys.argv[1] == "-sD":
-        scanner.resultTable()
-        scanner.defaultScan()
+    with open("result.txt", "a") as f:
 
-    elif sys.argv[1] == "-sX":
-        scanner.resultTable()
-        scanner.xmasScan()
+        if sys.argv[1] == "-sD":
+            f.write(scanner.resultTable())
+            f.write(scanner.defaultScan())
 
-    elif sys.argv[1] == "-sN":
-        scanner.resultTable()
-        scanner.nullScan()
+        elif sys.argv[1] == "-sX":
+            f.write(scanner.resultTable())
+            f.write(scanner.xmasScan())
 
-    elif sys.argv[1] == "-sA":
-        scanner.resultTable()
-        scanner.ackScan()
+        elif sys.argv[1] == "-sN":
+            f.write(scanner.resultTable())
+            f.write(scanner.nullScan())
+
+        elif sys.argv[1] == "-sA":
+            f.write(scanner.resultTable())
+            f.write(scanner.ackScan())
 
 
 if __name__ == "__main__":
