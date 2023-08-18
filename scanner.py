@@ -178,21 +178,13 @@ def main():
 
     # The tool title
     title = pyfiglet.figlet_format("PORT SCANNER")
-    with open("result.txt", "w") as f:
-        f.write(f"{CYAN}{title} {RESET}")
-        f.write("-" * 50)
-        f.write(f"Scanning target : {GREEN}{target}{RESET}")
-        f.write(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}")
-        f.write("-" * 50)
-    #print(f"{CYAN}{title} {RESET}")
+    print(f"{CYAN}{title} {RESET}")
 
     # Banner
-    """
     print("-" * 50)
     print(f"Scanning target : {GREEN}{target}{RESET}")
     print(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}")
     print("-" * 50)
-    """
     scanner = portScanner(target)
     
     # Check the options of scanning
