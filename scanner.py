@@ -178,15 +178,16 @@ class portScanner():
         return ("\n\nPORT\t\t\t\tSTATUS\t\t\t\tSERVICE\n-----------------------------------------------------------------------------------------")
     
 
-def main():
+def main(target, mode):
     # Checking the input arguments
+    """
     if len(sys.argv) == 3:
         # Convert the target to IPv4
         target = socket.gethostbyname(sys.argv[2])
     else:
         print("Usage: python3 scanner.py [OPTION] [TARGET]")
         sys.exit()
-
+    """
 
     # The tool title
     title = pyfiglet.figlet_format("PORT SCANNER")
@@ -201,22 +202,18 @@ def main():
     # Check the options of scanning
     with open("result.txt", "a") as f:
 
-        if sys.argv[1] == "-sD":
+        if mode == "-sD":
             f.write(scanner.resultTable())
             f.write(scanner.defaultScan())
 
-        elif sys.argv[1] == "-sX":
+        elif mode == "-sX":
             f.write(scanner.resultTable())
             f.write(scanner.xmasScan())
 
-        elif sys.argv[1] == "-sN":
+        elif mode == "-sN":
             f.write(scanner.resultTable())
             f.write(scanner.nullScan())
 
-        elif sys.argv[1] == "-sA":
+        elif mode == "-sA":
             f.write(scanner.resultTable())
             f.write(scanner.ackScan())
-
-
-if __name__ == "__main__":
-    main()

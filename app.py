@@ -1,4 +1,4 @@
-import tkinter
+import scanner
 import tkinter.messagebox
 import customtkinter as ctk
 
@@ -9,6 +9,20 @@ ctk.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dar
 # All Events
 def change_appearance_mode(new_appearance_mode : str):
     ctk.set_appearance_mode(new_appearance_mode)
+
+def scan_target():
+
+    # Get the mode an the target from the Entry feild
+    command = entry.get()
+    command = command.split()
+
+    # Scanning
+    scanner.main(command[1], command[0])
+
+    # Get the result and print it in the textbox area
+    with open("result.txt", "r") as f:
+        result = f.read()
+        output_area.insert(result)
 
 
 app = ctk.CTk()
@@ -45,7 +59,7 @@ appearence_options.grid(row=4, column=0, padx=20, pady=(10, 20))
 entry = ctk.CTkEntry(master=right_frame, placeholder_text="command...")
 entry.grid(row=0, column=0, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nswe")
 
-scan_button = ctk.CTkButton(master=right_frame, border_width=2)
+scan_button = ctk.CTkButton(master=right_frame, text="SCAN", border_width=2, command=scan_target)
 scan_button.grid(row=0, column=2, padx=(20, 20), pady=(20, 20), sticky="nswe")
 
 output_area = ctk.CTkTextbox(master=right_frame, font=ctk.CTkFont(size=13))
