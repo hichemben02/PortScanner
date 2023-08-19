@@ -59,10 +59,10 @@ class portScanner():
         result = ""
         for port in self.ports:
             # Use a random port as the source port
-            sourcePort = random.randint(1, 10000)
+            #sourcePort = random.randint(1, 10000)
 
             # Send a TCP packet to the port with SYN flag
-            scanstealthResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= sourcePort, dport=port, flags="S"), timeout=1, verbose=False)
+            scanstealthResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= 8000, dport=port, flags="S"), timeout=1, verbose=False)
 
             if not scanstealthResponse:
                 result = result + self.printResult(port, "Open/Filtered") + "\n"
@@ -102,7 +102,7 @@ class portScanner():
             sourcePort = random.randint(1, 10000)
 
             # Send a TCP packet with FPU flag which makes it a xmas scan
-            xmasResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= sourcePort, dport=port, flags="FPU"), timeout=1, verbose=False)
+            xmasResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= 8000, dport=port, flags="FPU"), timeout=1, verbose=False)
 
             # Now, if there's no reponse, so the port is open or filtered
             if not xmasResponse:
@@ -130,7 +130,7 @@ class portScanner():
             sourcePort = random.randint(1, 10000)
 
             # Send a TCP packet with no flags
-            nullResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= sourcePort, dport=port, flags=""), timeout=1, verbose=False)
+            nullResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= 8000, dport=port, flags=""), timeout=1, verbose=False)
 
             # Now, if there's no reponse, so the port is open or filtered
             if not nullResponse:
@@ -156,7 +156,7 @@ class portScanner():
             # Use a random port as the source port
             sourcePort = random.randint(1, 10000)
 
-            ackResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= sourcePort, dport=port, flags="A"), timeout=1, verbose=False)
+            ackResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport= 8000, dport=port, flags="A"), timeout=1, verbose=False)
 
             if not ackResponse:
                 result = result + self.printResult(port, "Filtered") + "\n"

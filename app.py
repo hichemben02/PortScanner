@@ -15,6 +15,7 @@ def scan_target():
     # Get the mode an the target from the Entry feild
     command = entry.get()
     command = command.split()
+    print(command)
 
     # Scanning
     scanner.main(command[1], command[0])
