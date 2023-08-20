@@ -8,7 +8,7 @@ try:
     import scapy.layers.inet as scli
     import random
 except ImportError:
-    print("\n Some libraries are missing !!!")
+    print("\n Some libraries are missing !!! Please install the requirements.txt")
     sys.exit()
 
 # Needed colors
@@ -175,7 +175,7 @@ class portScanner():
         return result
 
     def resultTable(self):
-        return ("\n\nPORT\t\t\t\tSTATUS\t\t\t\tSERVICE\n-----------------------------------------------------------------------------------------")
+        return ("\n\nPORT\t\t\t\tSTATUS\t\t\t\tSERVICE\n-----------------------------------------------------------------------------------------\n")
     
 
 def main(target, mode):

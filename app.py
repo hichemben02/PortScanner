@@ -1,6 +1,7 @@
 import scanner
 import tkinter.messagebox
 import customtkinter as ctk
+import colorama
 
 ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 ctk.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -11,6 +12,9 @@ def change_appearance_mode(new_appearance_mode : str):
     ctk.set_appearance_mode(new_appearance_mode)
 
 def scan_target():
+
+    # Clear the content of the textBox
+    output_area.delete("1.0", ctk.END)
 
     # Get the mode an the target from the Entry feild
     command = entry.get()
@@ -23,7 +27,7 @@ def scan_target():
     # Get the result and print it in the textbox area
     with open("result.txt", "r") as f:
         result = f.read()
-        output_area.insert(result)
+        output_area.insert("1.0", result)
 
 
 app = ctk.CTk()
