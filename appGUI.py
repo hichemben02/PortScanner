@@ -1,8 +1,14 @@
-import scanner
-import tkinter.messagebox
-import customtkinter as ctk
+try:
+    import scanner
+    import sys
+    import tkinter.messagebox
+    import customtkinter as ctk
+    from datetime import datetime
+except ImportError:
+    print("\n Some libraries are missing !!! Please install the requirements.txt")
+    sys.exit()
 
-ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+ctk.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 ctk.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
@@ -18,7 +24,9 @@ def scan_target():
     # Get the mode an the target from the Entry feild
     command = entry.get()
     command = command.split()
-    print(command)
+
+    output_area.insert("1.0", f"Scanning target : {command[1]}\n")
+    output_area.insert("1.0", f"Scanning starts at {str(datetime.now())}\n")
 
     # Scanning
     scanner.main(command[1], command[0])
@@ -56,7 +64,7 @@ intro.grid(row=1, column=0, sticky="nswe", padx=20, pady=20)
 appearence_label = ctk.CTkLabel(master=left_frame, text="Appearance Mode:", anchor="w")
 appearence_label.grid(row=3, column=0, padx=20, pady=(10, 0))
 
-appearence_options = ctk.CTkOptionMenu(master=left_frame, values=["Light", "Dark", "System"], command=change_appearance_mode)
+appearence_options = ctk.CTkOptionMenu(master=left_frame, values=["Dark", "Light", "System"], command=change_appearance_mode)
 appearence_options.grid(row=4, column=0, padx=20, pady=(10, 20))
 
 # Making the right Side
