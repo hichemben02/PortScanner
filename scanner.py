@@ -2,23 +2,12 @@ try:
     from datetime import datetime
     import sys
     import socket
-    import pyfiglet
-    from colorama import init, Fore
     import scapy.all as sc
     import scapy.layers.inet as scli
     import random
 except ImportError:
     print("\n Some libraries are missing !!! Please install the requirements.txt")
     sys.exit()
-
-# Needed colors
-init()
-GREEN = Fore.GREEN
-RESET = Fore.RESET
-RED = Fore.RED
-CYAN = Fore.CYAN
-YELLOW = Fore.YELLOW
-MAGENTA = Fore.MAGENTA
 
 
 class portScanner():
@@ -37,13 +26,13 @@ class portScanner():
             except OSError:
                 service = "////"
             
-            return (f"\r{str(port)}\t\t\t\t{GREEN}Open\t\t\t\t{RESET}{service}\n")
+            return (f"\r{str(port)}\t\t\t\tOpen\t\t\t\t{service}\n")
 
         elif status == "Filtered":
-            return (f"\r{str(port)}\t\t\t\t{YELLOW}Filtered\t\t\t\t{RESET} \n")
+            return (f"\r{str(port)}\t\t\t\tFiltered\t\t\t\t \n")
 
         elif status == "Close":
-            return (f"\r{str(port)}\t\t\t\t{RED}Close\t\t\t\t{RESET} \n")
+            return (f"\r{str(port)}\t\t\t\tClose\t\t\t\t \n")
         
         elif status == "Open/Filtered":
             try:
@@ -51,7 +40,7 @@ class portScanner():
             except OSError:
                 service = "////"
             
-            return (f"\r{str(port)}\t\t\t\t{YELLOW}Open/Filtered\t\t\t\t{RESET}{service}\n")
+            return (f"\r{str(port)}\t\t\t\tOpen/Filtered\t\t\t\t{service}\n")
     
     
     # Scan that sends a TCP packet to the target with a SYN flag to determine open ports   
@@ -190,17 +179,19 @@ def main(target, mode):
     """
 
     # The tool title
-    title = pyfiglet.figlet_format("PORT SCANNER")
+    """
+    title = "PORT SCANNER"
     with open("result.txt", "w") as f:
-        f.write(f"{CYAN}{title} {RESET}\n")
+        f.write(f"{title} \n")
         f.write("-" * 50 + "\n")
-        f.write(f"Scanning target : {GREEN}{target}{RESET}\n")
-        f.write(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}\n")
+        f.write(f"Scanning target : {target}\n")
+        f.write(f"Scanning starts at {str(datetime.now())}\n")
         f.write("-" * 50)
+    """
 
     scanner = portScanner(target)
     # Check the options of scanning
-    with open("result.txt", "a") as f:
+    with open("result.txt", "w") as f:
 
         if mode == "-sD":
             f.write(scanner.resultTable())

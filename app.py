@@ -1,73 +1,210 @@
-import scanner
-import tkinter.messagebox
-import customtkinter as ctk
-import colorama
+try:
+    from datetime import datetime
+    import sys
+    import socket
+    import pyfiglet
+    from colorama import init, Fore
+    import scapy.all as sc
+    import scapy.layers.inet as scli
+    import random
+except ImportError:
+    print("\n Some libraries are missing !!! Please install the requirements.txt")
+    sys.exit()
 
-ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-ctk.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
+# Needed colors
+init()
+GREEN = Fore.GREEN
+RESET = Fore.RESET
+RED = Fore.RED
+CYAN = Fore.CYAN
+YELLOW = Fore.YELLOW
+MAGENTA = Fore.MAGENTA
+
+class portScanner():
+    def __init__(self, target):
+        # Target to scan
+        self.target = target
+
+        # List of ports to scan (top 20 most scanned ports)
+        self.ports = [21, 22, 23, 25, 53, 80, 110, 111, 135, 139, 143, 443, 445, 993, 995, 1723, 3306, 3389, 5900, 8080]
+    
+    # Print the result dynamically
+    def printResult(self, port, status):
+        if status == "Open":
+            try:
+                service = socket.getservbyport(port)
+            except OSError:
+                service = "////"
+            
+            print(f"\r{str(port)}\t\t\t\t{GREEN}Open\t\t\t\t{RESET}{service}\n")
+
+        elif status == "Filtered":
+            print(f"\r{str(port)}\t\t\t\t{YELLOW}Filtered\t\t\t\t{RESET} \n")
+
+        elif status == "Close":
+            print(f"\r{str(port)}\t\t\t\t{RED}Close\t\t\t\t{RESET} \n")
+        
+        elif status == "Open/Filtered":
+            try:
+                service = socket.getservbyport(port)
+            except OSError:
+                service = "////"
+            
+            print(f"\r{str(port)}\t\t\t\t{YELLOW}Open/Filtered\t\t\t\t{RESET}{service}\n")
+    
+    
+    # Scan that sends a TCP packet to the target with a SYN flag to determine open ports   
+    def defaultScan(self):
+        for port in self.ports:
+            # Use a random port as the source port
+            sourcePort = random.randint(1, 10000)
+
+            # Send a TCP packet to the port with SYN flag
+            scanstealthResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport=sourcePort, dport=port, flags="S"), timeout=1, verbose=False)
+
+            if not scanstealthResponse:
+                self.printResult(port, "Open/Filtered")
+                continue
+            
+            if scanstealthResponse and scanstealthResponse.haslayer(sc.TCP):
+                flag = scanstealthResponse[sc.TCP].flags
+
+                # If the flag is SA (SYN-ACK) that means the port is open
+                if flag == "SA":
+                    sendReset = sc.sr(sc.IP(dst=self.target) / sc.TCP(sport=80, dport=port, flags="AR"), timeout=1, verbose=False)
+                    self.printResult(port, "Open")
+
+                elif flag == 0x14:
+                    self.printResult(port, "Close")
+
+                elif flag == "RA":
+                    continue
+            
+            # Here we check if the packet has a icmp layer, that means it may be filtered
+            if scanstealthResponse and scanstealthResponse.haslayer(scli.ICMP):
+                
+                # list of filter codes
+                filterCodes = [1, 2, 3, 9, 10, 13]
+
+                if scanstealthResponse[scli.ICMP].type == 3 and scanstealthResponse[scli.ICMP].code in filterCodes:
+                    self.printResult(port, "Filtered")
+                    continue
+        
+    
+
+    def xmasScan(self):
+        for port in self.ports:
+            # Use a random port as the source port
+            sourcePort = random.randint(1, 10000)
+
+            # Send a TCP packet with FPU flag which makes it a xmas scan
+            xmasResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport=sourcePort, dport=port, flags="FPU"), timeout=1, verbose=False)
+
+            # Now, if there's no reponse, so the port is open or filtered
+            if not xmasResponse:
+                self.printResult(port, "Open/Filtered")
+
+            elif xmasResponse.haslayer(sc.TCP):
+
+                if xmasResponse[sc.TCP].flags == 0x14:
+                    self.printResult(port, "Close")
+
+            elif xmasResponse.haslayer(scli.ICMP):
+                filterCodes = [1, 2, 3, 9, 10, 13]
+
+                if xmasResponse[scli.ICMP].type == 3 and xmasResponse[scli.ICMP].code in filterCodes:
+                    self.printResult(port, "Filtered")
+                    continue
+        
 
 
-# All Events
-def change_appearance_mode(new_appearance_mode : str):
-    ctk.set_appearance_mode(new_appearance_mode)
+    def nullScan(self):
+        for port in self.ports:
+            # Use a random port as the source port
+            sourcePort = random.randint(1, 10000)
 
-def scan_target():
+            # Send a TCP packet with no flags
+            nullResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport=sourcePort, dport=port, flags=""), timeout=1, verbose=False)
 
-    # Clear the content of the textBox
-    output_area.delete("1.0", ctk.END)
+            # Now, if there's no reponse, so the port is open or filtered
+            if not nullResponse:
+                self.printResult(port, "Open/Filtered")
 
-    # Get the mode an the target from the Entry feild
-    command = entry.get()
-    command = command.split()
-    print(command)
+            elif nullResponse.haslayer(sc.TCP):
+                if nullResponse[sc.TCP].flags == 0x14:
+                    self.printResult(port, "Close")
 
-    # Scanning
-    scanner.main(command[1], command[0])
+            elif nullResponse.haslayer(scli.ICMP):
+                filterCodes = [1, 2, 3, 9, 10, 13]
 
-    # Get the result and print it in the textbox area
-    with open("result.txt", "r") as f:
-        result = f.read()
-        output_area.insert("1.0", result)
+                if nullResponse[scli.ICMP].type == 3 and nullResponse[scli.ICMP].code in filterCodes:
+                    self.printResult(port, "Filtered")
+                    continue
 
 
-app = ctk.CTk()
-app.geometry("1100x580")
-app.title("Port Scanner")
+    # Send tcp packets with ACK flag to detect filtered ports
+    def ackScan(self):
+        for port in self.ports:
+            # Use a random port as the source port
+            sourcePort = random.randint(1, 10000)
 
-app.grid_columnconfigure(1, weight=1)
-app.grid_rowconfigure(0, weight=1)
+            ackResponse = sc.sr1(sc.IP(dst=self.target)/sc.TCP(sport=sourcePort, dport=port, flags="A"), timeout=1, verbose=False)
 
-left_frame = ctk.CTkFrame(master=app, width=220, corner_radius=0)
-left_frame.grid(row=0, column=0, sticky="nswe")
-left_frame.grid_rowconfigure(1, weight=2)
+            if not ackResponse:
+                self.printResult(port, "Filtered")
+            
+            elif ackResponse.haslayer(sc.TCP):
+                if ackResponse[sc.TCP].flags == 0x4:
+                    continue
 
-right_frame = ctk.CTkFrame(master=app)
-right_frame.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
-right_frame.grid_rowconfigure(1, weight=2)
-right_frame.grid_columnconfigure(0, weight=2)
+            elif ackResponse.haslayer(scli.ICMP):
+                filterCodes = [1, 2, 3, 9, 10, 13]
 
-# Making the left side
-guide_label = ctk.CTkLabel(master=left_frame, text="Welcome", font=ctk.CTkFont(size=20, weight="bold"))
-guide_label.grid(row=0, column=0, padx=20, pady=(20, 10))
+                if ackResponse[scli.ICMP].type == 3 and ackResponse[scli.ICMP].code in filterCodes:
+                    self.printResult(port, "Filtered")
+                    continue
 
-intro = ctk.CTkTextbox(master=left_frame, font=ctk.CTkFont(size=13))
-intro.insert("1.0", "Our port scanner is a software tool used to scan a target network or host for open ports.\n\n It helps identify which ports on a system are open and listening for incoming network connections.\n\n By scanning various ports, a port scanner can provide valuable information about the security and accessibility of a network.")
-intro.grid(row=1, column=0, sticky="nswe", padx=20, pady=20)
+    def resultTable(self):
+        print("\n\nPORT\t\t\t\tSTATUS\t\t\t\tSERVICE\n-----------------------------------------------------------------------------------------\n")
+    
 
-appearence_label = ctk.CTkLabel(master=left_frame, text="Appearance Mode:", anchor="w")
-appearence_label.grid(row=3, column=0, padx=20, pady=(10, 0))
+def main():
+    # Checking the input arguments
+    if len(sys.argv) == 3:
+        # Convert the target to IPv4
+        target = socket.gethostbyname(sys.argv[2])
+    else:
+        print("Usage: python3 scanner.py [OPTION] [TARGET]")
+        sys.exit()
+    
 
-appearence_options = ctk.CTkOptionMenu(master=left_frame, values=["Light", "Dark", "System"], command=change_appearance_mode)
-appearence_options.grid(row=4, column=0, padx=20, pady=(10, 20))
+    # The tool title
+    title = pyfiglet.figlet_format("PORT SCANNER")
+    
+    print(f"{CYAN}{title} {RESET}\n")
+    print("-" * 50 + "\n")
+    print(f"Scanning target : {GREEN}{target}{RESET}\n")
+    print(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}\n")
+    print("-" * 50)
 
-# Making the right Side
-entry = ctk.CTkEntry(master=right_frame, placeholder_text="command...")
-entry.grid(row=0, column=0, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nswe")
+    scanner = portScanner(target)
+    # Check the options of scanning
+    if sys.argv[1] == "-sD":
+        scanner.resultTable()
+        scanner.defaultScan()
 
-scan_button = ctk.CTkButton(master=right_frame, text="SCAN", border_width=2, command=scan_target)
-scan_button.grid(row=0, column=2, padx=(20, 20), pady=(20, 20), sticky="nswe")
+    elif sys.argv[1] == "-sX":
+        scanner.resultTable()
+        scanner.xmasScan()
 
-output_area = ctk.CTkTextbox(master=right_frame, font=ctk.CTkFont(size=13))
-output_area.grid(row=1, column=0, columnspan=3, padx=20, pady=20, sticky="nswe")
+    elif sys.argv[1] == "-sN":
+        scanner.resultTable()
+        scanner.nullScan()
 
-app.mainloop()
+    elif sys.argv[1] == "-sA":
+        scanner.resultTable()
+        scanner.ackScan()
+
+
+if __name__ == "__main__":
+    main()
