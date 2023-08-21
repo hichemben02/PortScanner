@@ -167,27 +167,7 @@ class portScanner():
     
 
 def main(target, mode):
-    # Checking the input arguments
-    """
-    if len(sys.argv) == 3:
-        # Convert the target to IPv4
-        target = socket.gethostbyname(sys.argv[2])
-    else:
-        print("Usage: python3 scanner.py [OPTION] [TARGET]")
-        sys.exit()
-    """
-
-    # The tool title
-    """
-    title = "PORT SCANNER"
-    with open("result.txt", "w") as f:
-        f.write(f"{title} \n")
-        f.write("-" * 50 + "\n")
-        f.write(f"Scanning target : {target}\n")
-        f.write(f"Scanning starts at {str(datetime.now())}\n")
-        f.write("-" * 50)
-    """
-
+    
     scanner = portScanner(target)
     # Check the options of scanning
     with open("result.txt", "w") as f:
@@ -207,3 +187,4 @@ def main(target, mode):
         elif mode == "-sA":
             f.write(scanner.resultTable())
             f.write(scanner.ackScan())
+

@@ -169,8 +169,10 @@ class portScanner():
     
 
 def main():
+    
     # Checking the input arguments
     if len(sys.argv) == 3:
+
         # Convert the target to IPv4
         target = socket.gethostbyname(sys.argv[2])
     else:

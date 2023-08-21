@@ -25,6 +25,7 @@ def scan_target():
     command = entry.get()
     command = command.split()
 
+    # Print the date
     output_area.insert("1.0", f"Scanning target : {command[1]}\n")
     output_area.insert("1.0", f"Scanning starts at {str(datetime.now())}\n")
 
