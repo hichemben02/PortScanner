@@ -4,9 +4,15 @@ try:
     import tkinter.messagebox
     import customtkinter as ctk
     from datetime import datetime
+    from colorama import init, Fore
 except ImportError:
     print("\n Some libraries are missing !!! Please install the requirements.txt")
     sys.exit()
+
+init()
+GREEN = Fore.GREEN
+MAGENTA = Fore.MAGENTA
+RESET = Fore.RESET
 
 ctk.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 ctk.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -26,8 +32,8 @@ def scan_target():
     command = command.split()
 
     # Print the date
-    output_area.insert("1.0", f"Scanning target : {command[1]}\n")
-    output_area.insert("1.0", f"Scanning starts at {str(datetime.now())}\n")
+    print(f"\nScanning target : {GREEN}{command[1]}{RESET}")
+    print(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}")
 
     # Scanning
     scanner.main(command[1], command[0])
