@@ -181,7 +181,7 @@ def main():
     
 
     # The tool title
-    title = pyfiglet.figlet_format("PORT SCANNER")
+    title = pyfiglet.figlet_format("PScan", font = "slant")
     
     print(f"{CYAN}{title} {RESET}\n")
     print("-" * 50 + "\n")

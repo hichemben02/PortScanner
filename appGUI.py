@@ -61,11 +61,11 @@ right_frame.grid_rowconfigure(1, weight=2)
 right_frame.grid_columnconfigure(0, weight=2)
 
 # Making the left side
-guide_label = ctk.CTkLabel(master=left_frame, text="Welcome", font=ctk.CTkFont(size=20, weight="bold"))
+guide_label = ctk.CTkLabel(master=left_frame, text="PScan", font=ctk.CTkFont(family="Helvetica", size=22, weight="bold"))
 guide_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
-intro = ctk.CTkTextbox(master=left_frame, font=ctk.CTkFont(size=13))
-intro.insert("1.0", "Our port scanner is a software tool used to scan a target network or host for open ports.\n\n It helps identify which ports on a system are open and listening for incoming network connections.\n\n By scanning various ports, a port scanner can provide valuable information about the security and accessibility of a network.")
+intro = ctk.CTkTextbox(master=left_frame, font=ctk.CTkFont(size=14))
+intro.insert("1.0", "PScan is a software tool used to scan a target network or host for open ports.\n\n It helps identify which ports on a system are open and listening for incoming network connections.\n\n By scanning various ports, a port scanner can provide valuable information about the security and accessibility of a network.")
 intro.grid(row=1, column=0, sticky="nswe", padx=20, pady=20)
 
 appearence_label = ctk.CTkLabel(master=left_frame, text="Appearance Mode:", anchor="w")
