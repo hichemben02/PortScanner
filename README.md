@@ -2,7 +2,6 @@
 - CS50 final project [[Harverd edx]]
 
 ## Description
-<hr>
 **PScan** is a powerful port scanning tool designed to provide comprehensive network analysis and security assessment. With its capabilities, PScan allows users to scan target systems for open/ filtered/close ports and identify potential vulnerabilities, making it an essential tool for network administrators, penetration testers.
 
 Key Features of **PScan** :
@@ -11,7 +10,6 @@ Key Features of **PScan** :
 3. *Scan Options* : PScan offers options to cater to different requirements. Users can perform default scan on specific ports (Top 20 most scanned ports in cybersecurity) or choose another option.
 
 ## Tools and libraries
-<hr>
 The programing language used to implement this project is **Python**.
 - *Socket* : python library that allows to send messages across a network.
 - *Scapy* : powerful interactive packet manipulation library written in Python. Scapy is able to forge or decode packets of a wide number of protocols, send them on the wire, capture them, match requests and replies...
@@ -21,5 +19,4 @@ The programing language used to implement this project is **Python**.
 the title above, which is the 'block' font).
 
 ## Conception
-<hr>
 
