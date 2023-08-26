@@ -1,5 +1,4 @@
 # PScan
-<hr>
 - CS50 final project [[Harverd edx]]
 
 ## Description
