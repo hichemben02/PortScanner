@@ -15,7 +15,7 @@ MAGENTA = Fore.MAGENTA
 RESET = Fore.RESET
 
 ctk.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
-ctk.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
+ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
 # All Events
@@ -46,7 +46,7 @@ def scan_target():
 
 app = ctk.CTk()
 app.geometry("1100x580")
-app.title("Port Scanner")
+app.title("PScan")
 
 app.grid_columnconfigure(1, weight=1)
 app.grid_rowconfigure(0, weight=1)

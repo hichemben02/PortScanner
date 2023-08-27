@@ -183,10 +183,10 @@ def main():
     # The tool title
     title = pyfiglet.figlet_format("PScan", font = "slant")
     
-    print(f"{CYAN}{title} {RESET}\n")
-    print("-" * 50 + "\n")
-    print(f"Scanning target : {GREEN}{target}{RESET}\n")
-    print(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}\n")
+    print(f"{CYAN}{title} {RESET}")
+    print("-" * 50)
+    print(f"Scanning target : {GREEN}{target}{RESET}")
+    print(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}")
     print("-" * 50)
 
     scanner = portScanner(target)

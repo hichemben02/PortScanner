@@ -187,4 +187,3 @@ def main(target, mode):
         elif mode == "-sA":
             f.write(scanner.resultTable())
             f.write(scanner.ackScan())
-
