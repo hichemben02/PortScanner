@@ -1,5 +1,5 @@
 # PScan
-- CS50 final project [[Harverd edx]]
+- CS50 final project [Harverd edx](https://pll.harvard.edu/course/cs50-introduction-computer-science?delta=0)
 
 ![intro](images/intro.png)
 
@@ -225,8 +225,8 @@ Set the mode and the target on the entry field of the app and press SCAN :
 ![screen1](images/screen1.png)
 
 ## Result
-- Command-Line
+- GUI
 ![screen1](images/screen2.png)
 
-- GUI
+- Command-Line
 ![screen3](images/screen3.png)
