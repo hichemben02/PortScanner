@@ -1,0 +1,5 @@
+# python libraries
+scapy
+customtkinter
+colorama
+pyfiglet
