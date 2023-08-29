@@ -3,6 +3,14 @@
 
 ![intro](images/intro.png)
 
+# Table Of Content
+- [Description](#description)
+- [Tools and libraries](#tools-and-libraries)
+- [Conception](#conception)
+- [Running](#running)
+- [Result](#result)
+
+
 ## Description
 **PScan** is a powerful port scanning tool designed to provide comprehensive network analysis and security assessment. With its capabilities, PScan allows users to scan target systems for open/ filtered/close ports and identify potential vulnerabilities, making it an essential tool for network administrators, penetration testers.
 
@@ -21,7 +29,7 @@ The programing language used to implement this project is **Python**.
 the title above, which is the 'block' font).
 
 ## Conception
-This tool is built using **Pyhton** and some important libraries, so it is based on a class called *portScanner* that contains multiples functions for scanning modes :
+This tool is built using **Pyhton** and some important libraries, so it is based on a class called *portScanner* contains multiple functions for scanning modes :
 ```python
 class portScanner():
 
