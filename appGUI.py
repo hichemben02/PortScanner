@@ -28,15 +28,15 @@ def scan_target():
     output_area.delete("1.0", ctk.END)
 
     # Get the mode an the target from the Entry feild
-    command = entry.get()
-    command = command.split()
+    target = entry.get()
+    mode = mode_options.get()
 
     # Print the date
-    print(f"\nScanning target : {GREEN}{command[1]}{RESET}")
+    print(f"\nScanning target : {GREEN}{target}{RESET} with {GREEN}{mode}{RESET} mode")
     print(f"Scanning starts at {MAGENTA}{str(datetime.now())}{RESET}")
 
     # Scanning
-    scanner.main(command[1], command[0])
+    scanner.main(target, mode)
 
     # Get the result and print it in the textbox area
     with open("result.txt", "r") as f:
@@ -57,7 +57,7 @@ left_frame.grid_rowconfigure(1, weight=2)
 
 right_frame = ctk.CTkFrame(master=app)
 right_frame.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
-right_frame.grid_rowconfigure(1, weight=2)
+right_frame.grid_rowconfigure(2, weight=2)
 right_frame.grid_columnconfigure(0, weight=2)
 
 # Making the left side
@@ -76,12 +76,15 @@ appearence_options.grid(row=4, column=0, padx=20, pady=(10, 20))
 
 # Making the right Side
 entry = ctk.CTkEntry(master=right_frame, placeholder_text="command...")
-entry.grid(row=0, column=0, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nswe")
+entry.grid(row=0, column=0, padx=(20, 0), pady=(20, 20), sticky="nswe")
+
+mode_options = ctk.CTkOptionMenu(master=right_frame, values=["Default", "Xmas", "Null", "ACK"])
+mode_options.grid(row=0, column=1, padx=20, pady=10)
 
 scan_button = ctk.CTkButton(master=right_frame, text="SCAN", border_width=2, command=scan_target)
 scan_button.grid(row=0, column=2, padx=(20, 20), pady=(20, 20), sticky="nswe")
 
 output_area = ctk.CTkTextbox(master=right_frame, font=ctk.CTkFont(size=13))
-output_area.grid(row=1, column=0, columnspan=3, padx=20, pady=20, sticky="nswe")
+output_area.grid(row=2, column=0, columnspan=3, padx=20, pady=20, sticky="nswe")
 
 app.mainloop()

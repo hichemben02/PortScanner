@@ -172,18 +172,18 @@ def main(target, mode):
     # Check the options of scanning
     with open("result.txt", "w") as f:
 
-        if mode == "-sD":
+        if mode == "Default":
             f.write(scanner.resultTable())
             f.write(scanner.defaultScan())
 
-        elif mode == "-sX":
+        elif mode == "Xmas":
             f.write(scanner.resultTable())
             f.write(scanner.xmasScan())
 
-        elif mode == "-sN":
+        elif mode == "Null":
             f.write(scanner.resultTable())
             f.write(scanner.nullScan())
 
-        elif mode == "-sA":
+        elif mode == "ACK":
             f.write(scanner.resultTable())
             f.write(scanner.ackScan())

@@ -1,7 +1,7 @@
 # PScan
 - CS50 final project [Harverd edx](https://pll.harvard.edu/course/cs50-introduction-computer-science?delta=0)
 
-![intro](images/intro.png)
+![intro](images/intro.jpg)
 
 # Table Of Content
 - [Description](#description)
@@ -229,12 +229,12 @@ sudo python3 app.py [MODE] [TARGET]
 sudo python3 appGUI.py
 ```
 
-Set the mode and the target on the entry field of the app and press SCAN :
-![screen1](images/screen1.png)
+Specify the mode and the target and press SCAN :
+![screen1](images/screen1.jpg)
 
 ## Result
 - GUI
-![screen1](images/screen2.png)
+![screen1](images/screen2.jpg)
 
 - Command-Line
 ![screen3](images/screen3.png)
