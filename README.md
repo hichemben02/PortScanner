@@ -1,5 +1,4 @@
 # PScan
-- CS50 final project [Harverd edx](https://pll.harvard.edu/course/cs50-introduction-computer-science?delta=0)
 
 ![intro](images/intro.jpg)
 
